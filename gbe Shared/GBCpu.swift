@@ -2,8 +2,6 @@
 
 import Foundation
 
-let bootstrap: [UInt8] = [0x33, 0xFF, 0xFE, 0xAF]
-
 class GBCpu {
   var a = Accumulator()
   var b = Register()
@@ -11,28 +9,35 @@ class GBCpu {
   var d = Register()
   var e = Register()
   var f = Status()
-  var hl = CombinedRegister()
+  var h = Register()
+  var l = Register()
+  lazy var bc = CombinedRegister(high: b, low: c)
+  lazy var de = CombinedRegister(high: d, low: e)
+  lazy var hl = CombinedRegister(high: h, low: l)
   var pc = Counter()
   var sp = Counter()
   
-  var ram = Array(repeating: UInt8.min, count: Int(UInt16.max))
+  var memoryController = MemoryController()
   
   init() {
+    guard let bootstrap = loadBootstap() else { fatalError() }
     for i in 0..<bootstrap.count {
-      ram[i] = bootstrap[i]
+      memoryController.set(UInt16(i), value: bootstrap[i])
     }
     pc.value = 0
   }
   
   func processNext() {
-    let instruction = ram[Int(pc.value)]
+    let instruction = memoryController.ram[Int(pc.value)]
     let op = opcode(for: Int(instruction))
+    print("Op: \(op.name), length: \(op.length)")
     var operand = Operand.none
-    switch op.length {
-    case 2:
-      operand = .single(ram[Int(pc.value) + 1])
-    case 3:
-      operand = .double(ram[Int(pc.value) + 1], ram[Int(pc.value) + 2])
+    switch op.operandType {
+    case .immediate8:
+      operand = .d8(memoryController.ram[Int(pc.value) + 1])
+    case .immediate16:
+      let value = combineValues(high: memoryController.ram[Int(pc.value) + 2], low: memoryController.ram[Int(pc.value) + 1])
+      operand = .d16(value)
     default:
       break
     }
@@ -41,7 +46,15 @@ class GBCpu {
   }
   
   func opcode(for op: Int) -> Opcode {
-    return Opcode.ops[op]()
+    return op == 0xCB ? Opcode.extendedOps[op]() : Opcode.ops[op]()
+  }
+  
+  func loadBootstap() -> Data? {
+    let bundle = Bundle.main
+    if let url = bundle.url(forResource: "DMG_ROM", withExtension: "bin") {
+      return try? Data(contentsOf: url)
+    }
+    return nil
   }
 }
 

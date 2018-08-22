@@ -39,6 +39,15 @@
 		ED65EAC3212B88F5009A9F08 /* Registers.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED65EAC2212B88F4009A9F08 /* Registers.swift */; };
 		ED65EAC4212B88F5009A9F08 /* Registers.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED65EAC2212B88F4009A9F08 /* Registers.swift */; };
 		ED65EAC5212B88F5009A9F08 /* Registers.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED65EAC2212B88F4009A9F08 /* Registers.swift */; };
+		ED65EACF212D04DF009A9F08 /* MemoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED65EACE212D04DF009A9F08 /* MemoryController.swift */; };
+		ED65EAD0212D04DF009A9F08 /* MemoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED65EACE212D04DF009A9F08 /* MemoryController.swift */; };
+		ED65EAD1212D04DF009A9F08 /* MemoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED65EACE212D04DF009A9F08 /* MemoryController.swift */; };
+		ED65EAD4212D06B8009A9F08 /* DMG_ROM.bin in Resources */ = {isa = PBXBuildFile; fileRef = ED65EAD3212D06B8009A9F08 /* DMG_ROM.bin */; };
+		ED65EAD5212D06B8009A9F08 /* DMG_ROM.bin in Resources */ = {isa = PBXBuildFile; fileRef = ED65EAD3212D06B8009A9F08 /* DMG_ROM.bin */; };
+		ED65EAD6212D06B8009A9F08 /* DMG_ROM.bin in Resources */ = {isa = PBXBuildFile; fileRef = ED65EAD3212D06B8009A9F08 /* DMG_ROM.bin */; };
+		ED65EAD8212D2264009A9F08 /* ExtendedOpcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED65EAD7212D2264009A9F08 /* ExtendedOpcode.swift */; };
+		ED65EAD9212D2264009A9F08 /* ExtendedOpcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED65EAD7212D2264009A9F08 /* ExtendedOpcode.swift */; };
+		ED65EADA212D2264009A9F08 /* ExtendedOpcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED65EAD7212D2264009A9F08 /* ExtendedOpcode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +87,9 @@
 		ED65EAB6212A62C4009A9F08 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ED65EABE212B84D1009A9F08 /* Opcode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Opcode.swift; sourceTree = "<group>"; };
 		ED65EAC2212B88F4009A9F08 /* Registers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Registers.swift; sourceTree = "<group>"; };
+		ED65EACE212D04DF009A9F08 /* MemoryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryController.swift; sourceTree = "<group>"; };
+		ED65EAD3212D06B8009A9F08 /* DMG_ROM.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = DMG_ROM.bin; sourceTree = "<group>"; };
+		ED65EAD7212D2264009A9F08 /* ExtendedOpcode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendedOpcode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,13 +139,16 @@
 		ED65EA62212A5766009A9F08 /* gbe Shared */ = {
 			isa = PBXGroup;
 			children = (
+				ED65EAD2212D0629009A9F08 /* Resources */,
 				ED65EA63212A5766009A9F08 /* Shaders.metal */,
 				ED65EA64212A5766009A9F08 /* Renderer.swift */,
 				ED65EA65212A5766009A9F08 /* ShaderTypes.h */,
 				ED65EA66212A576A009A9F08 /* Assets.xcassets */,
 				ED65EAAC212A57D6009A9F08 /* GBCpu.swift */,
 				ED65EABE212B84D1009A9F08 /* Opcode.swift */,
+				ED65EAD7212D2264009A9F08 /* ExtendedOpcode.swift */,
 				ED65EAC2212B88F4009A9F08 /* Registers.swift */,
+				ED65EACE212D04DF009A9F08 /* MemoryController.swift */,
 			);
 			path = "gbe Shared";
 			sourceTree = "<group>";
@@ -190,6 +205,14 @@
 				ED65EAB6212A62C4009A9F08 /* Info.plist */,
 			);
 			path = gbeTests;
+			sourceTree = "<group>";
+		};
+		ED65EAD2212D0629009A9F08 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				ED65EAD3212D06B8009A9F08 /* DMG_ROM.bin */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -314,6 +337,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED65EAD4212D06B8009A9F08 /* DMG_ROM.bin in Resources */,
 				ED65EA9B212A576A009A9F08 /* ShaderTypes.h in Resources */,
 				ED65EA74212A576A009A9F08 /* Main.storyboard in Resources */,
 				ED65EA9E212A576A009A9F08 /* Assets.xcassets in Resources */,
@@ -328,6 +352,7 @@
 				ED65EA85212A576A009A9F08 /* Main.storyboard in Resources */,
 				ED65EA9F212A576A009A9F08 /* Assets.xcassets in Resources */,
 				ED65EA9C212A576A009A9F08 /* ShaderTypes.h in Resources */,
+				ED65EAD5212D06B8009A9F08 /* DMG_ROM.bin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,6 +363,7 @@
 				ED65EA93212A576A009A9F08 /* Main.storyboard in Resources */,
 				ED65EAA0212A576A009A9F08 /* Assets.xcassets in Resources */,
 				ED65EA9D212A576A009A9F08 /* ShaderTypes.h in Resources */,
+				ED65EAD6212D06B8009A9F08 /* DMG_ROM.bin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,6 +387,8 @@
 				ED65EABF212B84D1009A9F08 /* Opcode.swift in Sources */,
 				ED65EAC3212B88F5009A9F08 /* Registers.swift in Sources */,
 				ED65EA71212A576A009A9F08 /* GameViewController.swift in Sources */,
+				ED65EACF212D04DF009A9F08 /* MemoryController.swift in Sources */,
+				ED65EAD8212D2264009A9F08 /* ExtendedOpcode.swift in Sources */,
 				ED65EA6F212A576A009A9F08 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -375,6 +403,8 @@
 				ED65EAC0212B84D1009A9F08 /* Opcode.swift in Sources */,
 				ED65EAC4212B88F5009A9F08 /* Registers.swift in Sources */,
 				ED65EA82212A576A009A9F08 /* GameViewController.swift in Sources */,
+				ED65EAD0212D04DF009A9F08 /* MemoryController.swift in Sources */,
+				ED65EAD9212D2264009A9F08 /* ExtendedOpcode.swift in Sources */,
 				ED65EA80212A576A009A9F08 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -389,6 +419,8 @@
 				ED65EAC1212B84D1009A9F08 /* Opcode.swift in Sources */,
 				ED65EAC5212B88F5009A9F08 /* Registers.swift in Sources */,
 				ED65EA90212A576A009A9F08 /* GameViewController.swift in Sources */,
+				ED65EAD1212D04DF009A9F08 /* MemoryController.swift in Sources */,
+				ED65EADA212D2264009A9F08 /* ExtendedOpcode.swift in Sources */,
 				ED65EA8E212A576A009A9F08 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

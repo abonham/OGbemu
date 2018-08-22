@@ -7,7 +7,13 @@ protocol RegisterProtocol {
   var value: U { get set }
 }
 
-struct Register: RegisterProtocol {
+extension RegisterProtocol {
+  mutating func decrement() {
+    value -= 1
+  }
+}
+
+class Register: RegisterProtocol {
   var value: UInt8 = 0
 }
 
@@ -63,8 +69,8 @@ struct CombinedRegister: RegisterProtocol {
       return UInt16(h + l)
     }
   }
-  var high = Register()
-  var low = Register()
+  var high: Register
+  var low: Register
 }
 
 struct Counter: RegisterProtocol {
