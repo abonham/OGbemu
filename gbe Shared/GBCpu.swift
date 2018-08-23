@@ -2,7 +2,7 @@
 
 import Foundation
 
-class GBCpu {
+class GBCpu: NSObject {
   var a = Accumulator()
   var b = Register()
   var c = Register()
@@ -19,7 +19,8 @@ class GBCpu {
   
   var memoryController = MemoryController()
   
-  init() {
+  override init() {
+    super.init()
     guard let bootstrap = loadBootstap() else { fatalError() }
     for i in 0..<bootstrap.count {
       memoryController.set(UInt16(i), value: bootstrap[i])
@@ -30,7 +31,7 @@ class GBCpu {
   func processNext() {
     let instruction = memoryController.ram[Int(pc.value)]
     let op = opcode(for: Int(instruction))
-    print("Op: \(op.name), length: \(op.length)")
+    print("Op: \(op.name ?? "unnamed"), length: \(op.length)")
     var operand = Operand.none
     switch op.operandType {
     case .immediate8:
@@ -46,7 +47,9 @@ class GBCpu {
   }
   
   func opcode(for op: Int) -> Opcode {
-    return op == 0xCB ? Opcode.extendedOps[op]() : Opcode.ops[op]()
+    return op == 0xCB
+      ? Opcode.extendedOps[Int(memoryController.ram[Int(pc.value) + 1])]
+      : Opcode.ops[op]
   }
   
   func loadBootstap() -> Data? {

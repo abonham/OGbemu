@@ -23,19 +23,38 @@ enum Operand {
 }
 
 struct Opcode {
-  typealias OpcodeFetch = () -> Opcode
-  
   let length: UInt16
   let operandType: OperandType
   let name: String?
   let executionBlock: (GBCpu, Operand) -> Void
   
-  static let ops: [OpcodeFetch] = {
-    var opArray = [OpcodeFetch](repeating: Opcode.noop, count: Int(UInt8.max))
+  static let keyPaths = [\GBCpu.b,
+                         \GBCpu.c,
+                         \GBCpu.d,
+                         \GBCpu.e,
+                         \GBCpu.h,
+                         \GBCpu.l,
+                         \GBCpu.hl,
+                         \GBCpu.a]
+  
+  static let ops: [Opcode] = {
+    var opArray = [Opcode](repeating: Opcode.noop, count: Int(UInt8.max))
     opArray[0x21] = ldhlImmediate
     opArray[0x31] = ldsp
     opArray[0x32] = ldHLDa
     opArray[0xAF] = xorA
+    
+    var ldArray: [Opcode] = []
+    for (index, kp) in keyPaths.enumerated() {
+      keyPaths.forEach { destination in
+        let op = makeLDOpcode(sourceKeyPath: kp, destinationKeyPath: destination)
+        ldArray.append(op)
+      }
+    }
+    for (index, op) in ldArray.enumerated() {
+      opArray[0x40 + index] = op
+    }
+    
     return opArray
   }()
   
@@ -50,12 +69,12 @@ struct Opcode {
 extension Opcode {
   
   //00
-  static func noop() -> Opcode {
+  static var noop: Opcode {
     return Opcode(length: 1, operandType: .none) { _,_ in return }
   }
   
   //21 LD HL, d16
-  static func ldhlImmediate() -> Opcode {
+  static var ldhlImmediate: Opcode {
     return Opcode(length: 3, operandType: .immediate16, name: "ld hl,d16") { cpu, operand in
       switch operand {
       case .d16(let value):
@@ -67,7 +86,7 @@ extension Opcode {
   }
   
   //31 LD SP, d16
-  static func ldsp() -> Opcode {
+  static var ldsp: Opcode {
     return Opcode(length: 3, operandType: .immediate16, name: "ldsp") { cpu, operand in
       switch operand {
       case .d16(let value):
@@ -79,20 +98,53 @@ extension Opcode {
   }
   
   //32 LD (HL-), A
-  static func ldHLDa() -> Opcode {
+  static var ldHLDa: Opcode {
     return Opcode(length: 1, operandType: .none, name: "LD (HL-), A") { cpu, _ in
       cpu.memoryController.set(cpu.hl.value, value: cpu.a.value)
       cpu.hl.decrement()
     }
   }
   //AF, XOR A
-  static func xorA() -> Opcode {
+  static var xorA: Opcode {
     return Opcode(length: 1, operandType: .none, name: "XOR A") { cpu, _ in
       cpu.a.value = cpu.a.value ^ cpu.a.value
       cpu.f.setZ(cpu.a.value == 0)
       cpu.f.setS(false)
       cpu.f.setC(false)
       cpu.f.setHC(false)
+    }
+  }
+}
+
+extension Opcode {
+  static func makeLDOpcode(sourceKeyPath: PartialKeyPath<GBCpu>, destinationKeyPath: PartialKeyPath<GBCpu>) -> Opcode {
+    let name = "ld \(String(describing: sourceKeyPath)) to \(String(describing: destinationKeyPath))"
+    return  Opcode(length: 1, operandType: .none, name: name) {  cpu, _ in
+      let value: UInt8
+      let register = cpu[keyPath: sourceKeyPath]
+      let destination = cpu[keyPath: destinationKeyPath]
+      if let _ = register as? CombinedRegister,
+        let _ = destination as? CombinedRegister {
+        fatalError("HALT")
+      }
+      
+      switch register {
+      case let register as Register:
+        value = register.value
+      case let register as CombinedRegister:
+        value = cpu.memoryController.ram[Int(register.value)]
+      default:
+        fatalError()
+      }
+      
+      switch destination {
+      case let destination as Register:
+        destination.value = value
+      case let destination as CombinedRegister:
+        cpu.memoryController.set(destination.value, value: value)
+      default:
+        fatalError()
+      }
     }
   }
 }

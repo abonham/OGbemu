@@ -74,7 +74,7 @@ class gbeTests: XCTestCase {
   func testLDHLDa() {
     testCpu.a.value = 0xFF
     testCpu.hl.value = 1
-    Opcode.ldHLDa().executionBlock(testCpu, Operand.none)
+    Opcode.ldHLDa.executionBlock(testCpu, Operand.none)
     XCTAssertEqual(testCpu.memoryController.ram[1], 0xFF)
     XCTAssertEqual(testCpu.hl.value, 0)
   }
@@ -95,7 +95,7 @@ class gbeTests: XCTestCase {
   func testBit7h() {
     testCpu.h.value = 0b10000000
     testCpu.f.setS(true)
-    let testOp = Opcode.extendedOps[0x7C]()
+    let testOp = Opcode.extendedOps[0x7C]
     testOp.executionBlock(testCpu, Operand.none)
     XCTAssertEqual(testCpu.f.z, 0)
     testCpu.h.value = 0

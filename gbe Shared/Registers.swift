@@ -5,6 +5,7 @@ import Foundation
 protocol RegisterProtocol {
   associatedtype U: FixedWidthInteger
   var value: U { get set }
+  static var idKey: WritableKeyPath<Self, U> { get }
 }
 
 extension RegisterProtocol {
@@ -13,14 +14,17 @@ extension RegisterProtocol {
   }
 }
 
-class Register: RegisterProtocol {
+final class Register: RegisterProtocol {
   var value: UInt8 = 0
+  static var idKey: WritableKeyPath<Register, UInt8> = \value
 }
 
 struct Accumulator: RegisterProtocol {
   var value: UInt8 = 0
+  static var idKey: WritableKeyPath<Accumulator, UInt8> = \value
 }
 struct Status: RegisterProtocol {
+  static var idKey: WritableKeyPath<Status, UInt8> = \value
   var value: UInt8 {
     get {
       return z + s + hc + c
@@ -56,6 +60,7 @@ struct Status: RegisterProtocol {
 }
 
 struct CombinedRegister: RegisterProtocol {
+  static var idKey: WritableKeyPath<CombinedRegister, UInt16> = \value
   var value: UInt16 {
     set {
       let h = newValue & 0xFF00
@@ -74,5 +79,6 @@ struct CombinedRegister: RegisterProtocol {
 }
 
 struct Counter: RegisterProtocol {
+  static var idKey: WritableKeyPath<Counter, UInt16> = \value
   var value: UInt16 = 0
 }
