@@ -5,26 +5,23 @@ import Foundation
 protocol RegisterProtocol {
   associatedtype U: FixedWidthInteger
   var value: U { get set }
-  static var idKey: WritableKeyPath<Self, U> { get }
 }
 
 extension RegisterProtocol {
   mutating func decrement() {
     value -= 1
   }
+  
+  mutating func increment() {
+    value += 1
+  }
 }
 
-final class Register: RegisterProtocol {
+class Register: RegisterProtocol {
   var value: UInt8 = 0
-  static var idKey: WritableKeyPath<Register, UInt8> = \value
 }
 
-struct Accumulator: RegisterProtocol {
-  var value: UInt8 = 0
-  static var idKey: WritableKeyPath<Accumulator, UInt8> = \value
-}
 struct Status: RegisterProtocol {
-  static var idKey: WritableKeyPath<Status, UInt8> = \value
   var value: UInt8 {
     get {
       return z + s + hc + c

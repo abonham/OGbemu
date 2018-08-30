@@ -104,6 +104,11 @@ class gbeTests: XCTestCase {
     XCTAssert(testCpu.f.hc > 0)
     XCTAssertEqual(testCpu.f.s, 0)
   }
+  
+  func testStop() {
+    testCpu.start()
+    XCTAssert(testCpu.stop)
+  }
 //
 //  func testPerformanceExample() {
 //
